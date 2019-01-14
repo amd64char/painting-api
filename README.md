@@ -1,7 +1,7 @@
 ## Setup
 
 ```bash
-  $ yarn install && open http://localhost:4000 && yarn run start
+  $ yarn install && open http://localhost:3000 && yarn run start
 ```
 
 # painting-api
