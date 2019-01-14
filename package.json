@@ -1,0 +1,22 @@
+{
+  "name": "painting-api",
+  "version": "1.0.0",
+  "description": "Fun simple API using Nodejs, MongoDB, Mongoose, Hapi, and Swagger",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "Charlie Seitz",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-hapi": "^2.3.1",
+    "graphql": "^14.0.2",
+    "hapi": "^17.8.1",
+    "hapi-swagger": "^9.3.0",
+    "inert": "^5.1.2",
+    "mongoose": "^5.4.3",
+    "nodemon": "^1.18.9",
+    "vision": "^5.4.4"
+  }
+}
