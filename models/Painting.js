@@ -7,9 +7,15 @@ const Schema = Mongoose.Schema;
  */
 
  const PaintingSchema = new Schema({
-    name: String,
-    url: String,
-    techniques: [String]
+   name: {
+      type: String,
+      index: {
+         unique: true,
+         dropDups: true
+      }
+   },
+   url: String,
+   techniques: [String]
  });
 
  module.exports = Mongoose.model('Painting', PaintingSchema);

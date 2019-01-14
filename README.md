@@ -1,12 +1,7 @@
-## Setup
-
-```bash
-  $ yarn install && open http://localhost:3000 && yarn run start
-```
 
 # painting-api
 
-Fun API using Nodejs, MongoDB, Mongoose, Hapi, and Swagger
+Fun API using Nodejs, MongoDB via mLab, Mongoose, Hapi, and Swagger
 
 ## Prerequisites
 
@@ -23,6 +18,7 @@ You will need the following things properly installed on your computer.
 * `yarn install`
 * `yarn add hapi nodemon`
 * `yarn add mongoose`
+* `yarn add hapi-swagger inert vision`
 
 ## Running / Development
 
