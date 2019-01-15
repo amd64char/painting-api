@@ -5,16 +5,18 @@ const Inert = require('inert');
 const Vision = require('vision');
 const HapiSwagger = require('hapi-swagger');
 const Pack = require('./package');
+require('dotenv').config();
 
-Mongoose.connect('mongodb://amd64char:cursive9092@ds155864.mlab.com:55864/painting-api');
+
+Mongoose.connect(process.env.DB_CONN);
 
 Mongoose.connection.once('open', () => {
     console.log('connected to database');
 });
 
 const server = Hapi.server({
-    port: 3000,
-    host: 'localhost'
+    port: process.env.PORT || 3000,
+    host: process.env.HOST
 });
 
 const init = async () => {

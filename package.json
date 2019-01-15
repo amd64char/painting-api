@@ -1,7 +1,7 @@
 {
   "name": "painting-api",
   "version": "1.0.0",
-  "description": "Fun simple API using Nodejs, MongoDB, Mongoose, Hapi, and Swagger",
+  "description": "Fun simple API using Nodejs, MongoDB via mLab, Mongoose, Hapi, and Swagger",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js"
@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "apollo-server-hapi": "^2.3.1",
+    "dotenv": "^6.2.0",
     "graphql": "^14.0.2",
     "hapi": "^17.8.1",
     "hapi-swagger": "^9.3.0",

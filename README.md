@@ -19,6 +19,7 @@ You will need the following things properly installed on your computer.
 * `yarn add hapi nodemon`
 * `yarn add mongoose`
 * `yarn add hapi-swagger inert vision`
+* `yarn add dotenv`
 
 ## Running / Development
 
