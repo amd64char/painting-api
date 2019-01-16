@@ -39,7 +39,7 @@ const init = async () => {
         {
             method: 'GET',
             path: '/',
-            handler: function(request, response) {
+            handler: function(request, reply) {
                 return `<h1>My painting api</h1>`;
             }
         },
@@ -50,8 +50,28 @@ const init = async () => {
                 description: 'Get all the paintings',
                 tags: ['api', 'v1', 'all paintings']
             },
-            handler: (request, response) => {
-                return Painting.find();
+            handler: async (request, reply) => {
+                /*
+                 * Grab the querystring parameters
+                 * page and limit to handle our pagination
+                */
+                var pageOptions = {
+                    page: parseInt(request.query.page) - 1 || 0, 
+                    limit: parseInt(request.query.limit) || 10
+                }
+                /*
+                 * Apply our sort and limit
+                */
+               try {
+                    return await Painting.find()
+                        .sort({dateCreated: 1, dateModified: -1})
+                        .skip(pageOptions.page * pageOptions.limit)
+                        .limit(pageOptions.limit)
+                        .exec();
+               } catch(err) {
+                   return err;
+               }
+
             }
         },
         {
@@ -61,7 +81,7 @@ const init = async () => {
                 description: 'Get a painting by id',
                 tags: ['api', 'v1', 'painting by id']
             },
-            handler: (request, response) => {
+            handler: (request, reply) => {
                 /*
                  * Grab incoming id parameter
                 */
@@ -78,7 +98,7 @@ const init = async () => {
                 notes: 'Example POST: <br/> { <br/> "name": "Mona Lisa", <br/> "url": "https://en.wikipedia.org/wiki/Mona_Lisa#/media/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg", <br/> "techniques": ["Portrait"] <br/> }',
                 tags: ['api', 'v1', 'add painting']
             },
-            handler: (request, response) => {
+            handler: (request, reply) => {
                 const {name, url, techniques} = request.payload;
                 /*
                  * Setup our model
@@ -98,7 +118,7 @@ const init = async () => {
                 description: 'Update an existing painting',
                 tags: ['api', 'v1', 'update painting']
             },
-            handler: (request, response) => {
+            handler: (request, reply) => {
                 const {name, url, techniques} = request.payload;
                 console.log(name, 'painting name');
                 /*
@@ -130,7 +150,7 @@ const init = async () => {
                 description: 'Delete an existing painting',
                 tags: ['api', 'v1', 'delete painting']
             },
-            handler: (request, response) => {
+            handler: (request, reply) => {
                 /*
                 * Grab incoming id parameter
                 */

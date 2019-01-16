@@ -15,7 +15,9 @@ const Schema = Mongoose.Schema;
       }
    },
    url: String,
-   techniques: [String]
+   techniques: [String],
+   dateCreated: [Date],
+   dateModified: [Date]
  });
 
  module.exports = Mongoose.model('Painting', PaintingSchema);
