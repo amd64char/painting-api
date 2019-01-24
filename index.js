@@ -1,4 +1,5 @@
 const Hapi = require('hapi');
+const Boom = require('boom');
 const Mongoose = require('mongoose');
 const Painting = require('./models/Painting');
 const Inert = require('inert');
@@ -69,7 +70,7 @@ const init = async () => {
                         .limit(pageOptions.limit)
                         .exec();
                } catch(err) {
-                   return err;
+                   return Boom.badRequest(Pack.errorMessages.getPaintingsAll);
                }
 
             }
@@ -81,13 +82,24 @@ const init = async () => {
                 description: 'Get a painting by id',
                 tags: ['api', 'v1', 'painting by id']
             },
-            handler: (request, reply) => {
+            handler: async (request, reply) => {
                 /*
                  * Grab incoming id parameter
                 */
                 const paintingId = request.params.id ? encodeURIComponent(request.params.id) : '';
-                //return `Requesting paintingId ${paintingId}!`;
-                return Painting.findById(paintingId);
+                /*
+                 * Find our painting based on id
+                */
+                const painting = await Painting.findById(paintingId);
+                //console.log(painting, 'found painting');
+                /*
+                 * Test if we found painting
+                */
+                if (painting === null) { 
+                    return Boom.notFound(Pack.errorMessages.getPaintingById);
+                } else {
+                    return painting;
+                }
             }
         },
         {
@@ -95,52 +107,62 @@ const init = async () => {
             path: '/api/v1/paintings',
             config: {
                 description: 'Create a new painting.',
-                notes: 'Example POST: <br/> { <br/> "name": "Mona Lisa", <br/> "url": "https://en.wikipedia.org/wiki/Mona_Lisa#/media/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg", <br/> "techniques": ["Portrait"] <br/> }',
+                notes: 'Example POST: <br/> { <br/> "name": "Mona Lisa", <br/> "artist": "Vincent Van Gogh", <br/> "url": "https://en.wikipedia.org/wiki/Mona_Lisa#/media/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg", <br/> "techniques": ["Portrait"] <br/> }',
                 tags: ['api', 'v1', 'add painting']
             },
             handler: (request, reply) => {
-                const {name, url, techniques} = request.payload;
+                const {name, artist, url, techniques} = request.payload;
                 /*
                  * Setup our model
                 */
                 const painting = new Painting({
                     name,
+                    artist,
                     url,
                     techniques
                 });
-                return painting.save();
+                /*
+                 * Test for schema validation errors before insert
+                */
+                var error = painting.validateSync();
+                if(error) {
+                    return Boom.badData(error.message);
+                } else {
+                    return painting.save();
+                }
             }
         },
         {
             method: 'PUT',
-            path: '/api/v1/paintings',
+            path: '/api/v1/paintings/{id}',
             config: {
                 description: 'Update an existing painting',
+                notes: 'Example PUT: <br/> { <br/> "artist": "Vincent Van Gogh", <br/> "techniques": ["Portrait", "Oil on canvas"] <br/> }',
                 tags: ['api', 'v1', 'update painting']
             },
-            handler: (request, reply) => {
-                const {name, url, techniques} = request.payload;
-                console.log(name, 'painting name');
+            handler: async (request, reply) => {
                 /*
-                 * Setup our model
+                * Grab incoming id parameter
                 */
-                const painting = new Painting({
-                    name,
-                    url,
-                    techniques
-                });
+                const paintingId = request.params.id ? encodeURIComponent(request.params.id) : '';
                 /*
-                 * Find a matching painting and update it
-                 * Issues a mongodb findAndModify update command
+                * Define our search criteria for the update. We're using the passed in id.
                 */
-                return painting.findOneAndUpdate({
-                    name: name
-                }, update, {
-                    upsert: true,
-                    new: true,
-                }, function(err, model) {
-                    console.log(err, 'update error');
-                });
+                const searchQuery = { _id: paintingId };
+                /*
+                * Update options
+                * new: If true, return the modified document rather than the original.
+                * runValidators: If true, run any update validator operations against the model schema.
+                */
+                const updateOptions = { new: true, runValidators: true };
+                /*
+                * Find a matching document, update it according to the search query, passing any options, and return the found document
+                */
+                try {
+                    return await Painting.findOneAndUpdate(searchQuery, request.payload, updateOptions);
+               } catch(err) {
+                   return Boom.badRequest(err.message);
+               }
             }
         },
         {
@@ -150,13 +172,27 @@ const init = async () => {
                 description: 'Delete an existing painting',
                 tags: ['api', 'v1', 'delete painting']
             },
-            handler: (request, reply) => {
+            handler: async (request, reply) => {
                 /*
                 * Grab incoming id parameter
                 */
                 const paintingId = request.params.id ? encodeURIComponent(request.params.id) : '';
-                return `Requesting paintingId ${paintingId} to be deleted!`;
-                //return Painting.findOneAndDelete({ '_id': paintingId });
+                /*
+                * Define our search criteria for the delete. We're using the passed in id.
+                */
+               const searchQuery = { _id: paintingId };
+               /*
+               * Delete options
+               */
+               const deleteOptions = {};
+               /*
+               * Find a matching document, removes it according to the search query, passing any options, and return the found document
+               */
+               try {
+                   return await Painting.findOneAndRemove(searchQuery, deleteOptions);
+              } catch(err) {
+                  return Boom.badRequest(err.message);
+              }
             }
         }
     ]);

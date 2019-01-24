@@ -6,6 +6,10 @@
   "scripts": {
     "start": "nodemon index.js"
   },
+  "errorMessages": {
+    "getPaintingsAll": "No paintings found based on search criteria.",
+    "getPaintingById": "Painting not found by id."
+  },
   "keywords": [
     "api",
     "v1",

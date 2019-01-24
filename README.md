@@ -1,7 +1,8 @@
 
 # painting-api
 
-Fun API using Nodejs, MongoDB via mLab, Mongoose, Hapi, and Swagger
+Fun API using Nodejs, MongoDB via mLab, Mongoose, Hapi, and Swagger.
+Also utilizes Boom to send back friendly HTTP error messages on endpoint errors.
 
 ## Prerequisites
 
@@ -33,4 +34,9 @@ You will need the following things properly installed on your computer.
 
 ## Further Reading / Useful Links
 
-* https://medium.freecodecamp.org/how-to-setup-a-powerful-api-with-nodejs-graphql-mongodb-hapi-and-swagger-e251ac189649
+* HapiJS/Boom [https://github.com/hapijs/boom](https://github.com/hapijs/boom)
+* Mongoose API [https://mongoosejs.com/docs/api.htm](https://mongoosejs.com/docs/api.htm)
+* Mongoose Models [https://mongoosejs.com/docs/models.html](https://mongoosejs.com/docs/models.html)
+* Mongoose Async/Await [https://mongoosejs.com/docs/promises.html](https://mongoosejs.com/docs/promises.html)
+
+* Project extended from: https://medium.freecodecamp.org/how-to-setup-a-powerful-api-with-nodejs-graphql-mongodb-hapi-and-swagger-e251ac189649
