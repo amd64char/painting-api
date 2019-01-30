@@ -46,6 +46,26 @@ const init = async () => {
         },
         {
             method: 'GET',
+            path: '/api/v1/paintings/all',
+            config: {
+                description: 'Get an all painting count',
+                tags: ['api', 'v1', 'painting count']
+            },
+            handler: async (request, reply) => {
+                const painting = await Painting.find();
+                /*
+                 * Test if we have a painting model
+                */
+                if (painting === null) { 
+                    return Boom.expectationFailed();
+                } else {
+                    return painting.length;
+                }
+            }
+
+        },
+        {
+            method: 'GET',
             path: '/api/v1/paintings',
             config: {
                 description: 'Get all the paintings',
