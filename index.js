@@ -17,7 +17,14 @@ Mongoose.connection.once('open', () => {
 
 const server = Hapi.server({
     port: process.env.PORT || 3000,
-    host: process.env.HOST
+    host: process.env.HOST,
+    routes: {
+        /*
+         * By default Hapi has CORS disabled. 
+         * We need to enable it so that our browser-based applications can consume data from a different host or port.
+        */
+        cors: true
+    }
 });
 
 const init = async () => {
